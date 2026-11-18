@@ -13,26 +13,27 @@ function rewriteAppRoute(url: string | undefined): string | undefined {
 }
 
 export default defineConfig({
-  plugins: [{
-    name: "clean-app-routes",
-    configureServer(server) {
-      server.middlewares.use((req, _res, next) => {
-        req.url = rewriteAppRoute(req.url);
-        next();
-      });
+  plugins: [
+    {
+      name: "clean-app-routes",
+      configureServer(server) {
+        server.middlewares.use((req, _res, next) => {
+          req.url = rewriteAppRoute(req.url);
+          next();
+        });
+      },
+      configurePreviewServer(server) {
+        server.middlewares.use((req, _res, next) => {
+          req.url = rewriteAppRoute(req.url);
+          next();
+        });
+      },
     },
-    configurePreviewServer(server) {
-      server.middlewares.use((req, _res, next) => {
-        req.url = rewriteAppRoute(req.url);
-        next();
-      });
-    },
-  }],
+  ],
   build: {
     rollupOptions: {
       input: {
         main: resolve(__dirname, "index.html"),
-        admin: resolve(__dirname, "admin/index.html"),
       },
     },
   },
